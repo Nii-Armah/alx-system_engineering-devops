@@ -1,0 +1,18 @@
+#!/bin/bash
+
+current_directory=$(pwd)
+parent_directory=$(dirname "$current_directory")
+
+html_files=$(find "$current_directory" -maxdepth 1 -name "*.html" -type f)
+
+for file in $html_files; do
+    file_name=$(basename "$file")
+    parent_file="$parent_directory/$file_name"
+
+    if [ ! -e "$parent_file" ] || [ "$file" -nt "$parent_file" ]; then
+        cp -p "$file" "$parent_directory"
+        echo "Copying $file_name to $parent_directory"
+    else
+        echo "Skipping $file_name as it already exists or is not newer"
+    fi
+done
